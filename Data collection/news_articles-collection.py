@@ -48,7 +48,7 @@ def filter_mediastack_articles(data):
     else:
         print("No articles retrieved.")
 
-media_stack_data = fetch_media_stack_articles('media_stack_filtered_supply_chain_articles.json')
+media_stack_data = fetch_media_stack_articles('media_stack_filtered_articles.json')
 media_stack=filter_mediastack_articles()
 media_stack=pd.read_json(media_stack)
 df=pd.DataFrame(media_stack)
@@ -56,7 +56,7 @@ print(df.describe())
 print(df.info())
 print(df.head())
 #df.to_excel("media_stack_filtered_supply_chain_articles.xlsx")
-df.to_csv("media_stack_filtered_supply_chain_articles.csv")
+df.to_csv("media_stack_articles.csv")
 
 
 
@@ -123,38 +123,39 @@ def filter_search_engine_news(results):
             "language":language,
             "country":country,
             "source": publisher,  # For simplicity, using publisher as source
-            "date": date,
+        
         })
     return filtered_results
 
 # Search query for supply chain news
-query = "shipment delay"
+querys = ["supply chain","shipment"]
 num_articles = 100
-results = search_engine_news(query, num_articles)
+for query in querys:
+    results = search_engine_news(query, num_articles)
+    
+    # Extract the relevant fields
+    filtered_results =filter_search_engine_news(results)
+    
+    # Save results to a JSON file
+    output_file = "custom_search_engine_news.json"
+    with open(output_file, "a", encoding="utf-8") as file:
+        json.dump(filtered_results, file, ensure_ascii=False, indent=4)
 
-# Extract the relevant fields
-filtered_results =filter_search_engine_news(results)
-
-# Save results to a JSON file
-output_file = "custom_search_engine_news.json"
-with open(output_file, "a", encoding="utf-8") as file:
-    json.dump(filtered_results, file, ensure_ascii=False, indent=4)
-
-print(f"Saved {len(filtered_results)} articles to {output_file}")
+    print(f"Saved {len(filtered_results)} articles to {output_file}")
 
 # Display the first few articles (optional)
-if filtered_results:
-    for idx, article in enumerate(filtered_results[:5], start=1):  # Display only the first 5
-        print(f"{idx}. {article['title']}\n   {article['url']}\n   {article['content']}\n")
-else:
-    print("No results found.")
-search_engine=pd.read_json("custom_search_engine_news.json")
+    if filtered_results:
+        for idx, article in enumerate(filtered_results[:5], start=1):  # Display only the first 5
+            print(f"{idx}. {article['title']}\n   {article['url']}\n   {article['content']}\n")
+    else:
+        print("No results found.")
+search_engine=pd.read_json("custom_search_engine_articles.json")
 df1=pd.DataFrame(search_engine)
 print(df1.describe())
 print(df1.info())
 print(df1.head())
 #df1.to_excel("custom_search_engine_news.xlsx")
-df1.to_csv("custom_search_engine_news.json.csv")
+df1.to_csv("custom_search_engine_articles.json.csv")
 
 
 
