@@ -196,7 +196,7 @@ def fetch_newsapi_articles(api_key, query, page_size=100, max_results=1000):
 API_KEY = "271b4406b0f24a899c09bb77c3723780"
 querys = ["shipment","supply chain"]
 
-for query in query:
+for query in querys:
     all_articles = fetch_newsapi_articles(API_KEY, query, page_size=100, max_results=1000)
     
     # Create a DataFrame from the articles
