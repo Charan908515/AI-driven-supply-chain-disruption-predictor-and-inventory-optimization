@@ -194,17 +194,18 @@ def fetch_newsapi_articles(api_key, query, page_size=100, max_results=1000):
 
 # Replace with your actual NewsAPI key
 API_KEY = "271b4406b0f24a899c09bb77c3723780"
-query = " disruption"
+querys = ["shipment","supply chain"]
 
-all_articles = fetch_newsapi_articles(API_KEY, query, page_size=100, max_results=1000)
-
-# Create a DataFrame from the articles
-if all_articles:
-    with open("newsapi_articles.json", "a", encoding="utf-8") as file:
-        json.dump(all_articles, file, ensure_ascii=False, indent=4)
-     # Display the first few rows
-else:
-    print("No articles found!")
+for query in query:
+    all_articles = fetch_newsapi_articles(API_KEY, query, page_size=100, max_results=1000)
+    
+    # Create a DataFrame from the articles
+    if all_articles:
+        with open("newsapi_articles.json", "a", encoding="utf-8") as file:
+            json.dump(all_articles, file, ensure_ascii=False, indent=4)
+         # Display the first few rows
+    else:
+        print("No articles found!")
 newsapi=pd.read_json("newsapi_articles.json")
 df2=pd.DataFrame(newsapi)
 df2.drop(columns=["urlToImage","source"],inplace=True)
