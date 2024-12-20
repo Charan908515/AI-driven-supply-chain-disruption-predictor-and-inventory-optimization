@@ -12,7 +12,7 @@ BASE_URL = 'https://api.mediastack.com/v1/news'
 def fetch_media_stack_articles():
     params = {
         'access_key': API_KEY,
-        'keywords': 'transportation',
+        'keywords': ['transportation delay',"shipment delay"],
         "category":"business"  # Maximum articles to fetch
     }
     response = requests.get(BASE_URL, params=params)
@@ -48,7 +48,7 @@ def filter_mediastack_articles(data):
     else:
         print("No articles retrieved.")
 
-media_stack_data = fetch_media_stack_articles('media_stack_filtered_articles.json')
+media_stack_data = fetch_media_stack_articles()
 media_stack=filter_mediastack_articles()
 media_stack=pd.read_json(media_stack)
 df=pd.DataFrame(media_stack)
@@ -128,7 +128,7 @@ def filter_search_engine_news(results):
     return filtered_results
 
 # Search query for supply chain news
-querys = ["supply chain","shipment"]
+querys = ["supply chain disruption","shipment delay","transportation delay"]
 num_articles = 100
 for query in querys:
     results = search_engine_news(query, num_articles)
@@ -194,7 +194,7 @@ def fetch_newsapi_articles(api_key, query, page_size=100, max_results=1000):
 
 # Replace with your actual NewsAPI key
 API_KEY = "271b4406b0f24a899c09bb77c3723780"
-querys = ["shipment","supply chain"]
+querys = ["shipment delay","supply chain disruption","transportation delay"]
 
 for query in querys:
     all_articles = fetch_newsapi_articles(API_KEY, query, page_size=100, max_results=1000)
