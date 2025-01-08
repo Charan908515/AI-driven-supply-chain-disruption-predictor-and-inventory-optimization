@@ -3,12 +3,10 @@ pandas
 seaborn
 numpy
 nltk
-spacy
 scikit-learn
-openai
-google-api-python-client
 slack-sdk
 sqlalchemy
 transformers
 tensorflow
-
+eventregistry
+groq
