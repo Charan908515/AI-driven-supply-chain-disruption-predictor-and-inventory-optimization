@@ -58,40 +58,35 @@ def analyze_risk_with_llama(content, client):
     try:
         truncated_content = truncate_for_llama(content)
 
-        prompt = f"""Analyze the following news article for electric atteries supply chain risks.
-        1. Material Availability and Resource Scarcity
-- Critical Materials: Lithium, cobalt, nickel, and rare earth elements are essential for EV batteries. Limited global reserves and geographic concentration increase vulnerability.
-- Geopolitical Factors: A significant share of mining occurs in politically unstable regions, such as cobalt mining in the Democratic Republic of Congo (DRC).
-- Competition for Resources: Growing global demand for these materials, driven by the EV boom and other industries, can strain supplies.
-2. Environmental and Social Concerns
-- Mining Practices: Extracting critical minerals can lead to deforestation, water pollution, and other environmental damage.
-- Labor Issues: Cobalt mining, in particular, has been associated with child labor and poor working conditions.
-- Sustainability Pressure: Consumers and regulators increasingly demand ethically sourced and environmentally friendly materials.
-3. Refining and Processing Bottlenecks
-- Geographic Concentration: A significant share of battery material processing occurs in China, creating potential risks due to geopolitical tensions or trade restrictions.
-- Infrastructure Gaps: Countries lacking refining infrastructure are dependent on imports, increasing costs and delays.
-4. Technological and Manufacturing Risks
-- Technology Dependence: Battery production relies on advanced manufacturing technologies and expertise, which are not uniformly distributed globally.
-- Quality and Reliability: Poor-quality materials or defects during manufacturing can lead to safety issues, such as battery fires or performance degradation.
-5. Supply Chain Disruption
-- Pandemics: COVID-19 highlighted vulnerabilities in global supply chains, including delays in material sourcing and component delivery.
-- Natural Disasters: Earthquakes, floods, and other disasters can disrupt mining, transportation, and manufacturing.
-- Cybersecurity Threats: Increasing digitization of supply chains introduces risks of cyberattacks on critical infrastructure.
-6. Regulatory and Trade Challenges
-- Export Controls: Countries with critical resources may impose export restrictions to prioritize domestic industries.
-- Tariffs and Trade Wars: Geopolitical conflicts can result in tariffs or trade barriers, increasing costs.
-- Regulatory Compliance: Meeting evolving global standards for environmental and social governance (ESG) practices can be costly and complex.
-7. Transportation and Logistics
-- Global Dependence: Battery components often travel thousands of miles before assembly, increasing risks of delays and carbon emissions.
-- High Costs: Shipping costs for heavy materials like lithium carbonate can be substantial.
-- Infrastructure Challenges: Inadequate transportation infrastructure in key mining regions can slow supply chain flows.
+        prompt = f"""You are a supply chain risk analyst specializing in electric vehicle (EV) batteries. Below is a news article about the EV battery supply chain. Based on the information in the article, identify and analyze the supply chain risks specifically for EV batteries. Use the following risk categories to structure your analysis:
+1. Raw Material Supply Risks
+   - Dependency on critical minerals like lithium, cobalt, and nickel.
+   - Geographic concentration of mining and processing facilities.
+2. Supplier Dependency
+   - Reliance on a limited number of battery manufacturers or suppliers.
+   - Risks associated with quality control and delivery timelines.
+3. Production and Manufacturing Risks
+   - Issues in scaling battery production to meet demand.
+   - Challenges related to advanced battery technology adoption (e.g., solid-state batteries).
+4. Transportation and Logistics Risks
+   - Delays or damages during the shipment of batteries or raw materials.
+   - Hazardous material handling regulations affecting transport.
+5. Regulatory and Compliance Risks
+   - Adherence to safety, environmental, and trade policies.
+   - Regional restrictions on battery materials and recycling practices.
+6. Technological Risks
+   - Rapid advancements in battery technology making current products obsolete.
+   - Cybersecurity risks in smart battery systems.
+7. Demand and Market Risks
+   - Fluctuations in demand for specific battery chemistries or capacities.
+   - Price pressures due to competition or market saturation.
+8. Environmental and Natural Disasters
+   - Climate events disrupting mining, production, or logistics.
+   - Long-term environmental concerns related to resource extraction and battery disposal.
 
-
-       
-
-        Article: {truncated_content}
-
-        Provide a structured analysis of the identified risks and their potential impact on the Medicine supply chain."""
+Provide a detailed assessment of the risks highlighted or implied in the article and suggest potential mitigation strategies.
+NEWS ARTICLE:{truncated_content}
+"""
 
         completion = client.chat.completions.create(
             model="llama3-70b-8192",
