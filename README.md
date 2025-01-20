@@ -1,6 +1,6 @@
 # AI-driven-supply-chain-disruption-predictor-and-inventory-optimization:
 
-## STEP-1: COLLECTING DATA  
+## MILESTONE-1: COLLECTING DATA  
 In this step the data is collected in form of news articles by using apis of Media Stack and NewsApi and also created a custom search engine that search for the news articles from news pages like bbc,cnn etc. based on the given query,to get more articles  include the pagination so that it collect more articles for each api request.The articles are saved in json format,after filtering the json to extract the required data like content,publisher,date etc..,the filtered data is saved in both json and csv format for future use.  
 
 You can use the apis by refering the below documentation link for both newsapi and media stack:  
@@ -34,7 +34,7 @@ You can use the apis by refering the below documentation link for both newsapi a
            *  key: Your API Key.    
             * cx: Your Custom Search Engine ID.    
            *  q: The search query.
-  ## STEP-2:ANALYSING THE ARTICLES USING LLM'S:
+  ## MILESTONE-2:ANALYSING THE ARTICLES USING LLM'S:
   ### Electric Vehicle Battery Supply Chain Risk & Sentiment Analysis
 
 This project analyzes news articles related to the electric vehicle (EV) battery supply chain. It integrates sentiment analysis and risk assessment to extract insights, compute risk scores, and save the results for further analysis.
@@ -108,7 +108,95 @@ The results are saved to `Risk_and_Sentiment_Results.csv` with the following col
 - `datetime`
 - `transformers`
 - `eventregistry`
+## MILESTONE-3:INVENTORY MANAGEMENT SYSTEM
+### 1. File: productManager.py
 
+#### Purpose
+
+This file implements a GUI-based inventory management system that integrates with a database to manage products and their stock levels. It provides functionalities like adding, updating, and exporting product data, and generating alerts based on risk analysis.
+
+#### Key Functionalities
+
+* GUI Application (Tkinter):
+
+    * Displays a form for entering product details.
+
+    * Displays a list of products stored in the database.
+
+    * Provides buttons to add, update, delete, and export product data.
+
+    * Includes a status bar for user notifications.
+
+* Database Interaction:
+
+    * Fetches data from a SQLite database (products.db).
+
+     * Allows CRUD operations on the product inventory.
+
+    * Risk Analysis and Alerts:
+
+    * Analyzes inventory utilization and external risk factors (from a CSV file).
+
+    * Generates alerts based on conditions like warehouse capacity and risk level.
+
+* Stock Adjustment:
+
+    * Adjusts stock levels based on risk levels and stores them in a MySQL database.
+
+#### Usage
+
+ Run the file to launch the GUI for inventory management. Use the form to manage products or interact with risk data for stock adjustments.
+
+### 2. File: database.py
+
+#### Purpose
+
+This file defines a Database class for managing product inventory stored in a SQLite database. It serves as the data backend for productManager.py.
+
+#### Key Functionalities
+
+* Database Initialization:
+
+    * Creates a products table in products.db if it does not exist.
+
+* CRUD Operations:
+
+    * fetch_all_rows: Retrieves all product records.
+
+    * fetch_by_product_id: Fetches a specific product using its ID.
+
+    * insert: Adds a new product to the database.
+
+    * remove: Deletes a product from the database.
+
+    * update: Updates product details.
+
+* Resource Management:
+
+    * Ensures the database connection is closed when the instance is deleted.
+
+#### Usage
+
+This file is imported by productManager.py to manage product data. Create an instance of the Database class with the database filename to start interacting with it.
+
+### 3. File: convertToExcel.py
+
+#### Purpose
+
+This file provides functionalities to export inventory data from the database to an Excel file and calculate profit for each product.
+
+#### Key Functionalities
+
+* Export to Excel (convert):
+
+    * Exports product data from the database (products.db) to an Excel file (product_list.xlsx).
+
+    * Formats the Excel file with headers, alignment, and styling.
+
+
+#### Usage
+
+Call the functions convert and calc_profit to generate and enhance the Excel file. Typically invoked from the productManager.py GUI.
 
 
 
