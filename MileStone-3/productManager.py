@@ -70,7 +70,7 @@ if __name__ == '__main__':
         warehouse_capacity=10000
         for product_index,row in data.iterrows():
             for risk_index,risk in risk_data.iterrows():
-                if row["country"]==risk["country"]:
+                if row["Country"]==risk["country"]:
             # Calculate warehouse utilization
                     utilization = row['incoming'] /warehouse_capacity
                     # Analyze risk factors and sentiment
@@ -108,7 +108,7 @@ if __name__ == '__main__':
         data=pd.DataFrame(products_database,columns=["ID","Month","incoming","outgoing","Country","stock_level"])
       
         for index,row in data.iterrows():
-            if row["country"].lower() in title.lower():
+            if row["Country"].lower() in title.lower():
                 # Fetch stock level
                 stock_level = row["stock_level"]
 
@@ -149,6 +149,8 @@ if __name__ == '__main__':
                         VALUES (%s, %s, %s, %s, %s)
                     """, (row["country"], stock_level, new_stock, stock_adjustment, published_at))
                 conn.commit()
+            else:
+                continue
 
                 return stock_adjustment
     risk_data=pd.read_csv("Risk_and_Sentiment_Results.csv")
