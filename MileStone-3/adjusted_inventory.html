@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adjusted Inventory</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container my-5">
+        <h1 class="text-center">Adjusted Inventory</h1>
+
+        <!-- Adjusted Inventory Table -->
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Company</th>
+                    <th>Country</th>
+                    <th>Original Stock Level</th>
+                    <th>Adjusted Stock Level</th>
+                    <th>Adjustment</th>
+                    <th>Month</th>
+                    <th>Reason</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in adjusted_data %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[7] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/" class="btn btn-primary">Back to Home</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
