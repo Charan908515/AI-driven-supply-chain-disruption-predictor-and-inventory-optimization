@@ -5,94 +5,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory Management</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        .search-bar {
+            margin-bottom: 15px;
+        }
+    </style>
 </head>
 <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">Inventory Management</a>
+        </div>
+    </nav>
+
     <div class="container my-5">
-        <h1 class="text-center">Inventory Management</h1>
-
         <!-- Add Product Form -->
-        <form action="/add" method="POST" class="my-4">
-            <div class="row g-3">
-                <div class="col-md-2">
-                    <input type="text" name="product_id" class="form-control" placeholder="Product ID" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="text" name="company" class="form-control" placeholder="Company" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="text" name="month" class="form-control" placeholder="Month" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="cost_price" class="form-control" placeholder="Cost Price" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="selling_price" class="form-control" placeholder="Selling Price" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="text" name="country" class="form-control" placeholder="Country" required>
-                </div>
-                <div class="col-md-2">
-                    <input type="number" name="stock_level" class="form-control" placeholder="Stock Level" required>
-                </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title text-center mb-4">Add Product</h4>
+                <form action="/add" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <input type="text" name="product_id" class="form-control" placeholder="Product ID" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="company" class="form-control" placeholder="Company" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="month" class="form-control" placeholder="Month" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" name="cost_price" class="form-control" placeholder="Cost Price" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" name="selling_price" class="form-control" placeholder="Selling Price" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="text" name="country" class="form-control" placeholder="Country" required>
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" name="stock_level" class="form-control" placeholder="Stock Level" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary mt-3 w-100">Add Product</button>
+                </form>
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Add Product</button>
-        </form>
-
-        <!-- Export to Excel Button -->
-        <form action="/export" method="POST" class="my-4">
-            <button type="submit" class="btn btn-success">Export to Excel</button>
-        </form>
-        <div class="my-4">
-            <a href="/run_prediction" class="btn btn-warning">Run Risk Prediction</a>
         </div>
 
-        <!-- Import CSV File -->
-        <form action="/import" method="POST" enctype="multipart/form-data" class="my-4">
-            <div class="row g-3">
-                <div class="col-md-8">
-                    <input type="file" name="file" class="form-control" accept=".csv,.xlsx" required>
-                </div>
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-info">Upload File</button>
+        <!-- Import/Export Buttons -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <form action="/export" method="POST">
+                            <button type="submit" class="btn btn-success w-100">
+                                Export to Excel
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </form>
-        
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <form action="/import" method="POST" enctype="multipart/form-data">
+                            <input type="file" name="file" class="form-control mb-2" accept=".csv,.xlsx" required>
+                            <button type="submit" class="btn btn-info w-100">
+                                Upload File
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation to Damage Log Pages -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <a href="/log_damage" class="btn btn-danger w-100">Log Product Damage</a>
+            </div>
+            <div class="col-md-6">
+                <a href="/damaged_logs" class="btn btn-warning w-100">View Damaged Logs</a>
+            </div>
+        </div>
+
+        <!-- Visualization & Risk Prediction -->
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <a href="/run_prediction" class="btn btn-warning w-100">Run Risk Prediction</a>
+            </div>
+            <div class="col-md-4">
+                <a href="/visualize/adjusted_inventory" class="btn btn-secondary w-100">Visualize Adjusted Inventory</a>
+            </div>
+            <div class="col-md-4">
+                <a href="/visualize/inventory" class="btn btn-dark w-100">Visualize Inventory</a>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <input type="text" id="search" class="form-control" placeholder="Search Products...">
+        </div>
 
         <!-- Products Table -->
-        <table class="table table-bordered table-striped">
-            <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>COMPANY</th>
-                    <th>Month</th>
-                    <th>Cost Price</th>
-                    <th>Selling Price</th>
-                    <th>Country</th>
-                    <th>Stock Level</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr>
-                    <td>{{ product[0] }}</td>
-                    <td>{{product[1]}}</td>
-                    <td>{{ product[2] }}</td>
-                    <td>{{ product[3] }}</td>
-                    <td>{{ product[4] }}</td>
-                    <td>{{ product[5] }}</td>
-                    <td>{{ product[6] }}</td>
-                    <td>
-                        <form action="/delete/{{ product[0] }}" method="POST" class="d-inline">
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class="card">
+            <div class="card-body">
+                <div class="table-container">
+                    <table class="table table-bordered table-striped">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Product ID</th>
+                                <th>Company</th>
+                                <th>Month</th>
+                                <th>Cost Price</th>
+                                <th>Selling Price</th>
+                                <th>Country</th>
+                                <th>Stock Level</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>{{ product[0] }}</td>
+                                <td>{{ product[1] }}</td>
+                                <td>{{ product[2] }}</td>
+                                <td>{{ product[3] }}</td>
+                                <td>{{ product[4] }}</td>
+                                <td>{{ product[5] }}</td>
+                                <td>{{ product[6] }}</td>
+                                <td>
+                                    <form action="/delete/{{ product[0] }}" method="POST" class="d-inline">
+                                        <button class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById("search").addEventListener("input", function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("table tbody tr");
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? "" : "none";
+            });
+        });
+    </script>
 </body>
 </html>
