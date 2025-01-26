@@ -296,7 +296,7 @@ def save_logs():
 @app.route('/get_damaged_logs', methods=['GET'])
 def get_damaged_logs():
     try:
-        adjusted_data=damged_db.fetch_all_rows()
+        adjusted_data=damaged_db.fetch_all_rows()
         return render_template('damaged_logs_table.html', damaged_log_data=adjusted_data)
 
     except Exception as e:
