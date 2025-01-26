@@ -139,7 +139,7 @@ def adjust_inventory_and_predict_risk():
 
         # Iterate through risks and adjust inventory
         for _, risk_row in risk_data.iterrows():
-            if ["raw materials","climate change","lithium","cobalt","nickel"] in risk_row["Title"] and risk_row["risk_score"]<=0.5:
+            if ["raw materials","climate change","lithium","cobalt","nickel"] in risk_row["Title"] and risk_row["risk_score"]<=-0.5: # risk score contain risk of the article between -1 to 1 in which -1 indicates the high risk and 1 indicates the low risk
                 for _, product_row in products.iterrows():
                     stock_level = product_row["stock_level"]
                     risk_score = risk_row["risk_score"]
