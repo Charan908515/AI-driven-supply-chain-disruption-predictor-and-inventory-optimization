@@ -4,8 +4,8 @@ seaborn
 numpy
 nltk
 scikit-learn
-slack-sdk
-sqlalchemy
+sqlite3
+smtplib
 transformers
 tensorflow
 eventregistry
