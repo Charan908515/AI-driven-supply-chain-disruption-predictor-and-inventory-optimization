@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from database import Database,Adjusted_database,DamagedLogDatabase
 import csv
-from electric_batteries import main
+from electric_batteries import main  # MileStone-2 code
 import pandas as pd
 from transformers import pipeline
 import matplotlib.pyplot as plt
