@@ -109,95 +109,112 @@ The results are saved to `Risk_and_Sentiment_Results.csv` with the following col
 - `transformers`
 - `eventregistry`
 ## MILESTONE-3:INVENTORY MANAGEMENT SYSTEM
-### 1. File: productManager.py
 
-#### Purpose
+  This is a Flask-based application for managing inventory, analyzing risks, and visualizing stock adjustments. The application uses SQLite for data storage and integrates various functionalities such as data import/export, risk analysis, and damage logging.
 
-This file implements a GUI-based inventory management system that integrates with a database to manage products and their stock levels. It provides functionalities like adding, updating, and exporting product data, and generating alerts based on risk analysis.
+### Features
+#### Core Features
+* Inventory Management:
 
-#### Key Functionalities
+    * Add, delete, and update products.
+    * Store product information, including company, cost price, selling price, stock levels, and more.
+    * Risk Analysis and Stock Adjustment:
 
-* GUI Application (Tkinter):
+    * Adjust inventory levels based on risk predictions.
+    * Generate stock adjustment reports and alerts (e.g., "buy", "sell", "monitor").
+*Data Import and Export:
 
-    * Displays a form for entering product details.
+    * Import data from .csv and .xlsx files.
+    * Export inventory data to Excel files.
+    * Visualization:
 
-    * Displays a list of products stored in the database.
+* Visualize stock levels by company.
+    * Visualize stock adjustments per company.
+* Damage Logging:
 
-    * Provides buttons to add, update, delete, and export product data.
+    * Log damaged items, including reasons, quantities, and reporting dates.
+    * View detailed damage logs.
+* API Endpoints:
 
-    * Includes a status bar for user notifications.
+    * Fetch inventory data in JSON format.
+    * Log and retrieve damaged product logs via API calls.
+* Database Structure
+    * 1. Products Table (products.db)
+        * Fields:
 
+            * product_id: Integer (Primary Key)
+            * company: Text
+            * month: Text
+            * cost_price: Integer
+            * selling_price: Integer
+            * country: Text
+            * stock_level: Integer
+    * 2. Adjusted Inventory Table (adjusted_data.db)
+        * Fields:
+    
+            * id: Integer (Primary Key)
+            * product_id: Integer
+            * company: Text
+            * country: Text
+            * stock_level: Integer
+            * stock_adjusted: Integer
+            * adjustment: Float
+            * month: Text
+            * reason: Text
+            * alert: Text
+    * 3. Damaged Logs Table (damaged_logs.db)
+        * Fields:
+    
+            * id: Integer (Primary Key)
+            * product_id: Integer
+            * company: Text
+            * country: Text
+            * damage_reason: Text
+            * quantity: Integer
+            * reported_date: Text
+            
+* Endpoints
+    * Web Endpoints
+        * / - Homepage (View products).
+        * /add - Add a new product (POST).
+        * /delete/<int:product_id> - Delete a product (POST).
+        * /export - Export data to an Excel file (POST).
+        * /import - Import data from .csv or .xlsx files (POST).
+        * /visualize/inventory - Visualize stock levels by company (GET).
+        * /visualize/adjusted_inventory - Visualize stock adjustments (GET).
+    * API Endpoints
+        * /api/products - Fetch all products (GET).
+        * /log_damage - Log damaged product (POST).
+        * /get_damaged_logs - Fetch all damaged product logs (GET).
+
+
+
+* Risk Analysis Integration
+The app integrates with an external module (electric_batteries) to perform risk analysis and adjust inventory. Risk levels determine stock adjustment as follows:
+
+    * High Risk: Decrease stock by 30% and set alert as "sell".
+    * Moderate Risk: No adjustment, set alert as "monitor".
+    * Low Risk: Increase stock by 10% and set alert as "buy".
+* Visualization
+    * Stock and adjustment data are visualized using Matplotlib.
+    * Graphs are dynamically rendered and embedded in the application.
+## MILESTONE-4: Sending Alerts through GMAIL and SLACK
+### Features
+* 1. Risk-Based Inventory Alerts
+        * Fetches risk data from external modules.
+        * Matches inventory data with risk levels to generate actionable alerts.
+* 2. Automated Email Notifications
+        * Sends detailed alerts via email to notify stakeholders about necessary actions.
+* 3. Slack Notifications
+        * Sends alert summaries to a specified Slack channel using a webhook.
+### How It Works:
+* Risk Analysis:Risk data is fetched using the electric_batteries module.Risk scores are computed for products based on analysis of relevant risk data.
+* Alert Levels:
+    * Sell: High risk and stock levels above a threshold.
+    * Buy: Low/moderate risk and stock levels below a threshold.
+    * Monitor: High risk with manageable stock or stable conditions.
 * Database Interaction:
-
-    * Fetches data from a SQLite database (products.db).
-
-     * Allows CRUD operations on the product inventory.
-
-    * Risk Analysis and Alerts:
-
-    * Analyzes inventory utilization and external risk factors (from a CSV file).
-
-    * Generates alerts based on conditions like warehouse capacity and risk level.
-
-* Stock Adjustment:
-
-    * Adjusts stock levels based on risk levels and stores them in a MySQL database.
-
-#### Usage
-
- Run the file to launch the GUI for inventory management. Use the form to manage products or interact with risk data for stock adjustments.
-
-### 2. File: database.py
-
-#### Purpose
-
-This file defines a Database class for managing product inventory stored in a SQLite database. It serves as the data backend for productManager.py.
-
-#### Key Functionalities
-
-* Database Initialization:
-
-    * Creates a products table in products.db if it does not exist.
-
-* CRUD Operations:
-
-    * fetch_all_rows: Retrieves all product records.
-
-    * fetch_by_product_id: Fetches a specific product using its ID.
-
-    * insert: Adds a new product to the database.
-
-    * remove: Deletes a product from the database.
-
-    * update: Updates product details.
-
-* Resource Management:
-
-    * Ensures the database connection is closed when the instance is deleted.
-
-#### Usage
-
-This file is imported by productManager.py to manage product data. Create an instance of the Database class with the database filename to start interacting with it.
-
-### 3. File: convertToExcel.py
-
-#### Purpose
-
-This file provides functionalities to export inventory data from the database to an Excel file and calculate profit for each product.
-
-#### Key Functionalities
-
-* Export to Excel (convert):
-
-    * Exports product data from the database (products.db) to an Excel file (product_list.xlsx).
-
-    * Formats the Excel file with headers, alignment, and styling.
-
-
-#### Usage
-
-Call the functions convert and calc_profit to generate and enhance the Excel file. Typically invoked from the productManager.py GUI.
-
-
-
+    * Uses SQLite for managing product data and adjusted inventory levels.
+* Notification Delivery:
+    * Alerts are sent via Gmail SMTP for email and a Slack webhook for Slack notifications.
 
