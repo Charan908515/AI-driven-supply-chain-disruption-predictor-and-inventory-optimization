@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from database import Database,Adjusted_database,DamagedLogDatabase
 import csv
-from electric_batteries import main  # MileStone-2 code
+from electric_batteries import main
 import pandas as pd
 from transformers import pipeline
 import matplotlib.pyplot as plt
@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 db = Database("products.db")
 adjusted_db=Adjusted_database("adjusted_data.db")
-
+damaged_db = DamagedLogDatabase("damaged_logs.db")
 @app.route('/')
 def index():
     products = db.fetch_all_rows()
@@ -270,28 +270,33 @@ def visualize_adjusted_inventory():
         return jsonify({"error": str(e)}), 500
 
 
-damaged_db = DamagedLogDatabase("damaged_logs.db")
 
-@app.route('/log_damage', methods=['POST'])
+
+@app.route('/log_damage')
 def log_damage():
+    return render_template('damaged_logs.html')
+
+
+@app.route("/save_log_damage",methods=["POST"])
+def save_logs():
     try:
-        data = request.get_json()
-        product_id = data['product_id']
-        company = data['company']
-        country = data['country']
-        damage_reason = data['damage_reason']
-        quantity = data['quantity']
-        reported_date = data['reported_date']
-
-        damaged_db.insert(product_id, company, country, damage_reason, quantity, reported_date)
-        return jsonify({"message": "Damage log added successfully."}), 200
+        product_id = request.form['product_id']
+        company=request.form["company"]
+        country = request.form['country']
+        damage_reason = request.form['cost_price']
+        quantity = int(request.form['selling_price'])
+        reported_date = request.form['country']
+       
+        
+        damaged_db.insert(product_id,company, country, damage_reason, quantity, reported_date)
+        return redirect(url_for('index'))
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
+        return f"Error: {e}", 400
+    
 @app.route('/get_damaged_logs', methods=['GET'])
 def get_damaged_logs():
     try:
-        adjusted_data=damaged_db.fetch_all_rows()
+        adjusted_data=damged_db.fetch_all_rows()
         return render_template('damaged_logs_table.html', damaged_log_data=adjusted_data)
 
     except Exception as e:
