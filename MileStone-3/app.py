@@ -133,18 +133,21 @@ def adjust_inventory_and_predict_risk():
                     stock_adjustment = stock_level * -0.20  # Decrease by 20%
                     summary=summarizer(risks["Risk Analysis"], max_length=50, min_length=10, do_sample=False)
                     reason=summary[0]['summary_text']
+                    alert="sell"
 
                 elif risks["risk_score"]>0:
                     stock_adjustment = stock_level * 0.05
                     summary=summarizer(risks["Risk Analysis"], max_length=50, min_length=10, do_sample=False)
                     reason=summary[0]['summary_text']   # increase by 5%
+                    alert="buy
                 else:
                     stock_adjustment = stock_level * 0.00
                     reason="there is no risk"
+                    alert="moniter"
     
             
                 new_stock = int(stock_level + stock_adjustment) 
-                adjusted_db.insert(data["product_id"],data["company"],data["country"],data["stock_level"],new_stock,stock_adjustment,data["month"],reason)
+                adjusted_db.insert(data["product_id"],data["company"],data["country"],data["stock_level"],new_stock,stock_adjustment,data["month"],reason,alert)
     try:
         # Fetch all rows from the adjusted database
         adjusted_data = adjusted_db.fetch_all_rows()
