@@ -139,4 +139,7 @@ def generate_alerts():
         print(f"Error generating alerts: {e}")
 
 if __name__ == "__main__":
-    generate_alerts()
+    while True: # generate the alerts for every 2 days
+        generate_alerts()
+        seconds=2*24*60*60 
+        time.sleep(seconds)
