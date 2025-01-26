@@ -139,6 +139,27 @@ def adjust_inventory_and_predict_risk():
 
         # Iterate through risks and adjust inventory
         for _, risk_row in risk_data.iterrows():
+            if ["raw materials","climate change","lithium","cobalt","nickel"] in risk_row["Title"] and risk_row["risk_score"]<=0.5:
+                for _, product_row in products.iterrows():
+                    stock_level = product_row["stock_level"]
+                    risk_score = risk_row["risk_score"]
+                    stock_adjustment = stock_level * -0.30  # Decrease by 30%
+                    alert = "sell"
+                    summary = summarizer(risk_row["Risk Analysis"], max_length=50, min_length=10, do_sample=False)
+                    reason = summary[0]['summary_text']
+                    new_stock = int(stock_level + stock_adjustment)
+                    adjusted_db.insert(
+                        product_row["id"],
+                        product_row["company"],
+                        product_row["country"],
+                        product_row["stock_level"],
+                        new_stock,
+                        stock_adjustment,
+                        product_row["month"],
+                        reason,
+                        alert)      
+                    
+            break    
             for _, product_row in products.iterrows():
                 # Match product with the risk based on company and month
                 if product_row["company"].lower() in risk_row["Title"].lower() and \
