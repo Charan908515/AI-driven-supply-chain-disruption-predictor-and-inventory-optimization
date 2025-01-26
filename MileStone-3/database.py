@@ -62,20 +62,21 @@ class Adjusted_database:
             stock_adjusted INT NOT NULL,
             adjustment FLOAT NOT NULL,
             month TEXT NOT NULL,
-            reason TEXT NOT NULL
+            reason TEXT NOT NULL,
+            alert TEXT NOT NULL
         );
         """)
         self.conn.commit()
 
     def fetch_all_rows(self):
-        self.cur.execute("SELECT product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason FROM adjusted_inventory")
+        self.cur.execute("SELECT product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason,alert FROM adjusted_inventory")
         return self.cur.fetchall()
 
-    def insert(self, product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason):
+    def insert(self, product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason,alert):
         self.cur.execute("""
-        INSERT INTO adjusted_inventory (product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason))
+        INSERT INTO adjusted_inventory (product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason,alert)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)
+        """, (product_id, company, country, stock_level, stock_adjusted, adjustment, month, reason,alert)
         self.conn.commit()
 
     def remove(self, product_id):
