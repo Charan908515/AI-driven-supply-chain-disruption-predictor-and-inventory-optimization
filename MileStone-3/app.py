@@ -292,7 +292,7 @@ def log_damage():
 def get_damaged_logs():
     try:
         adjusted_data=damaged_db.fetch_all_rows()
-        return render_template('damaged_logs_table.html', adjusted_data=adjusted_data)
+        return render_template('damaged_logs_table.html', damaged_log_data=adjusted_data)
 
     except Exception as e:
         return f"Error: {e}", 500
