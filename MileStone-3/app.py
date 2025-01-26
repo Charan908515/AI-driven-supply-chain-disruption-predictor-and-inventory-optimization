@@ -116,53 +116,88 @@ def import_file():
 
 
     
-@app.route("/run_prediction",methods=["GET"])
+@app.route("/run_prediction", methods=["GET"])
 def adjust_inventory_and_predict_risk():
-    risk_data_path=main() # call the main function from the milestone-2 module that returns the csv file path containing the data of the articles and the risk
-    risk_data=pd.read_csv(risk_data_path) # csv file:risk_and_sentiment_results
-    risk_data["Published At"]=pd.to_datetime(risk_data['Published At']).dt.date
-    risk_data["Month"] = pd.to_datetime(risk_data["Published At"]).dt.month_name()
-    summarizer = pipeline("summarization")
-    products_database=db.fetch_all_rows()
-    products=pd.DataFrame(products_database,columns=["id","company","month","cost_price","selling_price","country","stock_level"])
-    for risk_id,risks in risk_data.iterrows():
-        for product_id,data in products.iterrows():
-            if data["company"] in risks["Title"].lower() and data["month"].lower()==risks["Month"]:
-                stock_level=data["stock_level"]
-                if risks["risk_score"]<0:  # risk score is between -1 to 1, -1 is for high risk and 1 for low risk
-                    stock_adjustment = stock_level * -0.20  # Decrease by 20%
-                    summary=summarizer(risks["Risk Analysis"], max_length=50, min_length=10, do_sample=False)
-                    reason=summary[0]['summary_text']
-                    alert="sell"
-
-                elif risks["risk_score"]>0:
-                    stock_adjustment = stock_level * 0.05
-                    summary=summarizer(risks["Risk Analysis"], max_length=50, min_length=10, do_sample=False)
-                    reason=summary[0]['summary_text']   # increase by 5%
-                    alert="buy
-                else:
-                    stock_adjustment = stock_level * 0.00
-                    reason="there is no risk"
-                    alert="moniter"
-    
-            
-                new_stock = int(stock_level + stock_adjustment) 
-                adjusted_db.insert(data["product_id"],data["company"],data["country"],data["stock_level"],new_stock,stock_adjustment,data["month"],reason,alert)
     try:
-        # Fetch all rows from the adjusted database
+        # Fetch risk data from the milestone-2 module
+        risk_data_path = main()  # Returns the path to the CSV containing risk analysis
+        risk_data = pd.read_csv(risk_data_path)
+
+        # Preprocess risk data
+        risk_data["Published At"] = pd.to_datetime(risk_data["Published At"]).dt.date
+        risk_data["Month"] = pd.to_datetime(risk_data["Published At"]).dt.month_name().str.lower()
+
+        # Initialize summarizer once (efficient)
+        summarizer = pipeline("summarization")
+
+        # Fetch products from the database
+        products_database = db.fetch_all_rows()
+        products = pd.DataFrame(
+            products_database,
+            columns=["id", "company", "month", "cost_price", "selling_price", "country", "stock_level"]
+        )
+
+        # Iterate through risks and adjust inventory
+        for _, risk_row in risk_data.iterrows():
+            for _, product_row in products.iterrows():
+                # Match product with the risk based on company and month
+                if product_row["company"].lower() in risk_row["Title"].lower() and \
+                        product_row["month"].lower() == risk_row["Month"]:
+                    
+                    stock_level = product_row["stock_level"]
+                    risk_score = risk_row["risk_score"]
+
+                    # Risk thresholds for adjustment and alert logic
+                    if risk_score <= -0.5:  # High Risk
+                        stock_adjustment = stock_level * -0.30  # Decrease by 30%
+                        alert = "sell"
+                    elif -0.5 < risk_score < 0.5:  # Moderate Risk
+                        stock_adjustment = stock_level * 0.00  # No adjustment
+                        alert = "monitor"
+                    elif risk_score >= 0.5:  # Low Risk
+                        stock_adjustment = stock_level * 0.10  # Increase by 10%
+                        alert = "buy"
+                    else:
+                        stock_adjustment = 0
+                        alert = "monitor"
+
+                    # Generate a summary of the risk analysis
+                    summary = summarizer(risk_row["Risk Analysis"], max_length=50, min_length=10, do_sample=False)
+                    reason = summary[0]['summary_text']
+
+                    # Calculate new stock levels
+                    new_stock = int(stock_level + stock_adjustment)
+
+                    # Insert adjusted inventory data into the adjusted database
+                    adjusted_db.insert(
+                        product_row["id"],
+                        product_row["company"],
+                        product_row["country"],
+                        product_row["stock_level"],
+                        new_stock,
+                        stock_adjustment,
+                        product_row["month"],
+                        reason,
+                        alert
+                    )
+
+        # Fetch and display all adjusted data
         adjusted_data = adjusted_db.fetch_all_rows()
         return render_template('adjusted_inventory.html', adjusted_data=adjusted_data)
+
     except Exception as e:
         return f"Error: {e}", 500
 
-            
 
 
-
-   
-
+    
 
 
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
